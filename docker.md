@@ -40,6 +40,10 @@ docker buildx create --name mybuilder
 docker buildx use mybuilder
 docker buildx inspect --bootstrap
 ```
+- builder delete
+```bash
+docker buildx rm mybuilder
+```
 - create a cross image
 ```bash
 docker buildx build --platform linux/arm/v7 -t myhub/myimage . --push
