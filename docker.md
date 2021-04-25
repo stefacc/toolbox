@@ -48,3 +48,7 @@ docker buildx rm mybuilder
 ```bash
 docker buildx build --platform linux/arm/v7 -t myhub/myimage . --push
 ```
+- show image details
+```bash
+docker buildx imagetools inspect myhub/myimage
+```
