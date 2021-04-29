@@ -1,5 +1,5 @@
-# Atlassian Bamboo
-# install
+# atlassian bamboo
+## install
 ```bash
 sudo apt install openjdk-8-jdk -y
 
@@ -10,7 +10,7 @@ mkdir bamboo
 nano bamboo-setup/atlassian-bamboo-7.2.3/atlassian-bamboo/WEB-INF/classes/bamboo-init.properties
 => bamboo.home=/home/ubuntu/bamboo
 ```
-# run
+## run
 ```bash
 cd bamboo-setup/atlassian-bamboo-7.2.3
 ./bin/start-bamboo.sh
