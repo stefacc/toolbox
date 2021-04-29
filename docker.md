@@ -1,5 +1,5 @@
 # docker
-- install
+## install
 ```bash
 sudo su
 apt update -y
@@ -13,7 +13,7 @@ systemctl restart docker
 ``` 
 Platforms: linux/amd64, linux/arm64, linux/ppc64le, linux/s390x, linux/386, linux/arm/v7, linux/arm/v6
 ``` 
-- install
+### install
 ```bash
 sudo su
 apt install binfmt-support qemu-user-static
@@ -25,14 +25,14 @@ docker build --platform=local -o . git://github.com/docker/buildx
 mkdir -p ~/.docker/cli-plugins
 mv buildx ~/.docker/cli-plugins/docker-buildx
 ```
-- builder creation using a random name
+### builder creation using a random name
 ```bash
 docker run --rm --privileged docker/binfmt:820fdd95a9972a5308930a2bdfb8573dd4447ad3
 
 docker buildx create --use
 docker buildx inspect --bootstrap
 ```
-- builder creation using a custom name
+### builder creation using a custom name
 ```bash
 docker run --rm --privileged docker/binfmt:820fdd95a9972a5308930a2bdfb8573dd4447ad3
 
@@ -40,15 +40,15 @@ docker buildx create --name mybuilder
 docker buildx use mybuilder
 docker buildx inspect --bootstrap
 ```
-- builder delete
+### builder delete
 ```bash
 docker buildx rm mybuilder
 ```
-- create a cross image
+### create a cross image
 ```bash
 docker buildx build --platform linux/arm/v7 -t myhub/myimage . --push
 ```
-- show image details
+### show image details
 ```bash
 docker buildx imagetools inspect myhub/myimage
 ```
