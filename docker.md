@@ -17,6 +17,23 @@ docker system prune
 ```bash
 docker system prune -a
 ```
+## remove image
+- image
+```bash
+docker rmi Image1 Image2
+```
+- dangling image
+```bash
+docker image prune
+```
+- using a pattern
+```bash
+docker images -a | grep "pattern" | awk '{print $3}' | xargs docker rmi
+```
+- all
+```bash
+docker rmi $(docker images -a -q)
+```
 ## buildx
 - supported platform
 ``` 
