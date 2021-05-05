@@ -8,6 +8,15 @@ usermod -aG docker ubuntu
 
 systemctl restart docker
 ```
+## prune
+- clean up any resources — images, containers, volumes, and networks
+```bash
+docker system prune
+```
+- clean up any resources — images, containers, volumes, and networks + stopped containers and all unused images
+```bash
+docker system prune -a
+```
 ## buildx
 - supported platform
 ``` 
