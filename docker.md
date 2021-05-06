@@ -34,6 +34,14 @@ docker images -a | grep "pattern" | awk '{print $3}' | xargs docker rmi
 ```bash
 docker rmi $(docker images -a -q)
 ```
+## create tar.gz from pulled images
+```bash
+docker save myhub/myimage | gzip > myimage.tar.gz
+```
+## load image from tar.gz
+```bash
+docker load -i myimage.tar.gz
+```
 ## buildx
 - supported platform
 ``` 
