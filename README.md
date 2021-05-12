@@ -6,3 +6,5 @@
 - [git](git.md)
 ### pipelining
 - [atlassian bamboo](bamboo.md)
+### fast-utility
+- [fast-local-webserver](fast-local-webserver.md)
