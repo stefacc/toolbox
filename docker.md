@@ -42,3 +42,7 @@ docker save myhub/myimage | gzip > myimage.tar.gz
 ```bash
 docker load -i myimage.tar.gz
 ```
+## kill a container from inside (restart test)
+```bash
+kill -s SIGTERM 1
+```
