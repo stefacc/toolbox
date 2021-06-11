@@ -10,3 +10,5 @@
 - [fast-local-webserver](fast-local-webserver.md)
 ### spying
 - [whatsapp-onliner](whatsapp-onliner.md)
+### commands
+- [commands](commands.md)
