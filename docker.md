@@ -46,3 +46,12 @@ docker load -i myimage.tar.gz
 ```bash
 kill -s SIGTERM 1
 ```
+## api
+### run a container that can send request to the docker engine host
+```bash
+docker run -v /var/run/docker.sock:/var/run/docker.sock -it --rm alpine /bin/ash
+```
+### example of request
+```bash
+curl --unix-socket /var/run/docker.sock -H "Content-Type: application/json" -d '{"Image": "alpine"}' -X POST http://localhost/v1.39/containers/create
+```
