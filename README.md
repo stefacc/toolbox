@@ -10,3 +10,5 @@
 - [fast-local-webserver](fast-local-webserver.md)
 ### commands
 - [screen](screen.md)
+### aws
+- [aws](aws.md)
