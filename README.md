@@ -12,3 +12,5 @@
 - [whatsapp-onliner](whatsapp-onliner.md)
 ### commands
 - [screen](screen.md)
+### aws
+- [aws](aws.md)
