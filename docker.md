@@ -55,3 +55,7 @@ docker run -v /var/run/docker.sock:/var/run/docker.sock -it --rm alpine /bin/ash
 ```bash
 curl --unix-socket /var/run/docker.sock -H "Content-Type: application/json" -d '{"Image": "alpine"}' -X POST http://localhost/v1.39/containers/create
 ```
+## run a docker forever
+```bash
+CMD tail -f /dev/null
+```
