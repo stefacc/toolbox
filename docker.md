@@ -51,6 +51,13 @@ kill -s SIGTERM 1
 ```bash
 docker run -v /var/run/docker.sock:/var/run/docker.sock -it --rm alpine /bin/ash
 ```
+### run a container that can send request to the docker engine host (using docker-compose)
+```bash
+volumes:
+  - /var/run/docker.sock:/var/run/docker.sock
+environment:
+  DOCKER_HOST: unix:///var/run/docker.sock
+```
 ### example of request
 ```bash
 curl --unix-socket /var/run/docker.sock -H "Content-Type: application/json" -d '{"Image": "alpine"}' -X POST http://localhost/v1.39/containers/create
