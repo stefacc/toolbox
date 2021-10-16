@@ -1,4 +1,16 @@
 # git
+## cloning using custom path 
+```
+git clone **url-of-repo** directory
+```
+## adding submodule 
+```
+git submodule add **url-of-repo**
+```
+## cloning with submodules 
+```
+git clone --recurse-submodules **url-of-repo**
+```
 ## moving repo git history to another repo 
 ```
 cd repo-dest
