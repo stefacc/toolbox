@@ -3,6 +3,11 @@
 ```
 git clone **url-of-repo** directory
 ```
+## moving  files or directories
+also for submodules
+```
+git mv src dst
+```
 ## adding submodule 
 ```
 git submodule add **url-of-repo**
@@ -18,7 +23,7 @@ git checkout master
 git remote add repo-src **url-of-repo-src**
 git fetch repo-src
 git merge repo-src/master --allow-unrelated-histories
-git remote rm repo-src
+git remote rm repo-src (optional)
 ```
 ## aws credential-helper
 - `.gitconfigure`
