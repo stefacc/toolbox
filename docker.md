@@ -75,7 +75,7 @@ docker image tag <FROM-ECR-URL/IMAGE:TAG> <TO-ECR-URL/IMAGE:TAG>
 
 aws ecr get-login-password --region <REGION> --profile <PROFILE> | docker login --username <USERNAME> --password-stdin <TO-ECR-URL>
 
-docker image push <TO-ECR-URL>
+docker image push <TO-ECR-URL/IMAGE:TAG>
 
 docker image rm <FROM-ECR-URL/IMAGE:TAG>
 docker image rm <TO-ECR-URL/IMAGE:TAG>
