@@ -66,3 +66,17 @@ curl --unix-socket /var/run/docker.sock -H "Content-Type: application/json" -d '
 ```bash
 CMD tail -f /dev/null
 ```
+## aws-ecr to aws-ecr
+```bash
+aws ecr get-login-password --region <REGION> --profile <PROFILE> | docker login --username <USERNAME> --password-stdin <FROM-ECR-URL>
+
+docker image pull <FROM-ECR-URL/IMAGE:TAG>
+docker image tag <FROM-ECR-URL/IMAGE:TAG> <TO-ECR-URL/IMAGE:TAG>
+
+aws ecr get-login-password --region <REGION> --profile <PROFILE> | docker login --username <USERNAME> --password-stdin <TO-ECR-URL>
+
+docker image push <TO-ECR-URL>
+
+docker image rm <FROM-ECR-URL/IMAGE:TAG>
+docker image rm <TO-ECR-URL/IMAGE:TAG>
+```
