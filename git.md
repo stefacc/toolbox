@@ -10,7 +10,7 @@ git mv src dst
 ```
 ## adding submodule 
 ```
-git submodule add **url-of-repo**
+git submodule add **url-of-repo** <dst optional>
 ```
 ## cloning with submodules 
 ```
