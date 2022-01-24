@@ -18,3 +18,4 @@
 ### fluent-bit
 - [dockerfile](fluent-bit/dockerfile)
 - [fluent-bit.conf](fluent-bit/fluent-bit.conf)
+- [client.ts](fluent-bit/client.ts)
