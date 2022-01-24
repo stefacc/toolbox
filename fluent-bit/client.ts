@@ -9,23 +9,23 @@ const logger = new FluentClient('SERVICE-1', {
 });
 
 logger.socketOn(FluentSocketEvent.CONNECTED, ()=>{
-    console.log("FLUENTBIT","CONNECTED");
+    console.log("FLUENTBIT", "CONNECTED");
 })
 
 logger.socketOn(FluentSocketEvent.ERROR, ()=>{
-    console.log("FLUENTBIT","ERROR");
+    console.log("FLUENTBIT", "ERROR");
 })
 
 logger.socketOn(FluentSocketEvent.TIMEOUT, ()=>{
-    console.log("FLUENTBIT","TIMEOUT");
+    console.log("FLUENTBIT", "TIMEOUT");
 })
 
 logger.socketOn(FluentSocketEvent.CLOSE, ()=>{
-    console.log("FLUENTBIT","CLOSE");
+    console.log("FLUENTBIT", "CLOSE");
 })
 
 logger.socketOn(FluentSocketEvent.ESTABLISHED, ()=>{
-    console.log("FLUENTBIT","ESTABLISHED");
+    console.log("FLUENTBIT", "ESTABLISHED");
 })
 
 export class Logger {
