@@ -15,3 +15,4 @@
 - [aws](aws.md)
 ### fluent-bit
 - [dockerfile](fluent-bit/dockerfile)
+- [conf](fluent-bit/fluent-bit.conf)
