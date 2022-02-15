@@ -1,6 +1,5 @@
-# aws
-## ecr
-### list-images 
+# ecr
+## list-images 
 ```bash
 aws ecr list-images --repository-name <NAME> --profile <PROFILE>
 ```
@@ -15,7 +14,7 @@ result
     ]
 }
 ```
-### batch-delete-image
+## batch-delete-image
 ```bash
 aws ecr batch-delete-image --repository-name <NAME> --image-ids imageTag=<TAG> --profile <PROFILE>
 ```
