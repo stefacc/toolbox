@@ -22,7 +22,7 @@ result
 }
 ```
 ### file
-``.bat`` file to run this command on windows
+[start-ec2.bat](start-ec2.bat) file to run this command on windows
 ## stop an ec2 machine
 ```bash
 aws ec2 stop-instances --instance-ids <ID>
@@ -46,4 +46,4 @@ result
 }
 ```
 ### file
-``.bat`` file to run this command on windows
+[stop-ec2.bat](stop-ec2.bat) file to run this command on windows
