@@ -1,7 +1,7 @@
 # toolbox
 ### aws
-- [ec2](ec2.md)
-- [ecr](ecr.md)
+- [ec2](aws/ec2.md)
+- [ecr](aws/ecr.md)
 ### commands
 - [linux](linux.md)
 - [screen](screen.md)
