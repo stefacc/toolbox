@@ -1,22 +1,25 @@
 # toolbox
+### aws
+- [ec2](ec2.md)
+- [ecr](ecr.md)
+### commands
+- [linux](linux.md)
+- [screen](screen.md)
 ### containerizing
 - [alpine](alpine.md)
 - [buildx](buildx.md)
 - [docker](docker.md)
-### versioning
-- [git](git.md)
-### pipelining
-- [atlassian bamboo](bamboo.md)
 ### fast-utility
 - [fast-local-webserver](fast-local-webserver.md)
-### spying
-- [whatsapp-onliner](whatsapp-onliner.md)
-### commands
-- [linux](linux.md)
-- [screen](screen.md)
-### aws
-- [aws](aws.md)
 ### fluent-bit
 - [client.ts](fluent-bit/client.ts)
 - [dockerfile](fluent-bit/dockerfile)
 - [fluent-bit.conf](fluent-bit/fluent-bit.conf)
+### pipelining
+- [atlassian bamboo](bamboo.md)
+### spying
+- [whatsapp-onliner](whatsapp-onliner.md)
+### versioning
+- [git](git.md)
+### windows
+- [windows](windows.md)
