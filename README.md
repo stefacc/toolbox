@@ -6,9 +6,9 @@
 - [linux](linux.md)
 - [screen](screen.md)
 ### containerizing
-- [alpine](alpine.md)
-- [buildx](buildx.md)
-- [docker](docker.md)
+- [alpine](containerizing/alpine.md)
+- [buildx](containerizing/buildx.md)
+- [docker](containerizing/docker.md)
 ### fast-utility
 - [fast-local-webserver](fast-local-webserver.md)
 ### fluent-bit
