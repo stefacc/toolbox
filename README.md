@@ -16,7 +16,8 @@
 - [dockerfile](fluent-bit/dockerfile)
 - [fluent-bit.conf](fluent-bit/fluent-bit.conf)
 ### js
-- [async/await](async-await.js)
+- [async/await](js/async-await.js)
+- [in browser jquery](jquery.js)
 ### pipelining
 - [atlassian bamboo](bamboo.md)
 ### spying
