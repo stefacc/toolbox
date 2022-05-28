@@ -1,6 +1,4 @@
 # toolbox
-### async/await
-- async/await](async-await.js)
 ### aws
 - [ec2](aws/ec2.md)
 - [ecr](aws/ecr.md)
@@ -17,6 +15,8 @@
 - [client.ts](fluent-bit/client.ts)
 - [dockerfile](fluent-bit/dockerfile)
 - [fluent-bit.conf](fluent-bit/fluent-bit.conf)
+### js
+- [async/await](async-await.js)
 ### pipelining
 - [atlassian bamboo](bamboo.md)
 ### spying
