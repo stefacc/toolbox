@@ -38,6 +38,14 @@ git fetch repo-src
 git merge repo-src/master --allow-unrelated-histories
 git remote rm repo-src (optional)
 ```
+## duplicating or mirroring a repo 
+```
+git clone --bare https://github.com/EXAMPLE-USER/OLD-REPOSITORY.git
+cd OLD-REPOSITORY.git
+git push --mirror https://github.com/EXAMPLE-USER/NEW-REPOSITORY.git
+cd ..
+rm -rf OLD-REPOSITORY.git
+```
 ## aws credential-helper
 - `.gitconfigure`
 ```
