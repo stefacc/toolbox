@@ -46,6 +46,14 @@ git push --mirror https://github.com/EXAMPLE-USER/NEW-REPOSITORY.git
 cd ..
 rm -rf OLD-REPOSITORY.git
 ```
+## creating a new git master branch
+```
+git checkout --orphan new-master
+git rm -rf .
+git branch -m master old-master
+git branch -m new-master master
+git push -f origin master
+```
 ## aws credential-helper
 - `.gitconfigure`
 ```
