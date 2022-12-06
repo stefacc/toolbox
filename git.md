@@ -46,7 +46,7 @@ git push --mirror https://github.com/EXAMPLE-USER/NEW-REPOSITORY.git
 cd ..
 rm -rf OLD-REPOSITORY.git
 ```
-## creating a new git master branch
+## creating a new git master branch (or to remove history)
 ```
 git checkout --orphan new-master
 git rm -rf .
