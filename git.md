@@ -49,10 +49,18 @@ rm -rf OLD-REPOSITORY.git
 ## creating a new git master branch (or to remove history)
 ```
 git checkout --orphan new-master
+
+--> keeping files
+git add -A
+git commit -am "Initial commit message"
+
+--> removing files
 git rm -rf .
+
 git branch -m master old-master
 git branch -m new-master master
 git push -f origin master
+git gc --aggressive --prune=all 
 ```
 ## aws credential-helper
 - `.gitconfigure`
