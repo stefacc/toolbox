@@ -59,8 +59,20 @@ git rm -rf .
 
 git branch -m master old-master
 git branch -m new-master master
+git branch -D old-master
 git push -f origin master
 git gc --aggressive --prune=all 
+```
+## creating a new git master branch with cherry pick (or to remove history)
+```
+git checkout --orphan new-master
+git cherry-pick A^..B
+git merge main --allow-unrelated-histories
+git branch -m main old-master
+git branch -m new-master main
+git branch -D old-master
+git push -f origin main
+git gc --aggressive --prune=all
 ```
 ## aws credential-helper
 - `.gitconfigure`
