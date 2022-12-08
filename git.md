@@ -66,6 +66,7 @@ git gc --aggressive --prune=all
 ## creating a new git master branch with cherry pick (or to remove history)
 ```
 git checkout --orphan new-master
+git rm -rf
 git cherry-pick A^..B
 git merge main --allow-unrelated-histories
 git branch -m main old-master
