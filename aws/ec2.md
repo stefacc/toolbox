@@ -47,3 +47,11 @@ result
 ```
 ### file
 [stop-ec2.bat](stop-ec2.bat) file to run this command on windows
+## get all EC2 instances across all regions
+```
+for region in `aws ec2 describe-regions --region us-east-1 --output text | cut -f4`
+do
+     echo -e "\nListing Instances in region:'$region'..."
+     aws ec2 describe-instances --region $region
+done
+```
