@@ -57,6 +57,9 @@ git commit -am "Initial commit message"
 --> removing files
 git rm -rf .
 
+--> better performance
+git push --set-upstream origin new-master
+
 git branch -m master old-master
 git branch -m new-master master
 git branch -D old-master
