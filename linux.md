@@ -4,6 +4,11 @@
 sudo mkdir /var/directory
 sudo chmod -R 777 /var/directory
 ```
+## find
+### find all files with ``js`` suffix excluding path A
+```
+find -name "*.js" -not -path "./PATH_A/*"
+```
 ## sed
 [sed test website](https://sed.js.org/)
 ### replace one string only (in-file)
