@@ -1,4 +1,4 @@
-###user-data to start at boot of an EC2
+### user-data to start at boot of an EC2
 ``` bash
 #!/bin/bash
 apt update
