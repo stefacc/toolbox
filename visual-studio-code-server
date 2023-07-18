@@ -1,8 +1,10 @@
 #!/bin/bash
 apt update
 export HOME=/root
+mkdir -p /root/.config/code-server
 curl -fsSL https://code-server.dev/install.sh | sh
+echo 'bind-addr: 0.0.0.0:8080
+auth: none
+password: PASSWORD
+cert: false' > /root/.config/code-server/config.yaml 
 systemctl enable --now code-server@root
-sed -i.bak 's/auth: password/auth: none/' ~/.config/code-server/config.yaml
-sed -i.bak 's/bind-addr: 127.0.0.1:8080/bind-addr: 0.0.0.0:8080/' ~/.config/code-server/config.yaml
-systemctl restart code-server@root
