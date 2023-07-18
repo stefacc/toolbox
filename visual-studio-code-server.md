@@ -1,3 +1,5 @@
+###user-data to start at boot of an EC2
+``` bash
 #!/bin/bash
 apt update
 export HOME=/root
@@ -8,3 +10,4 @@ auth: none
 password: PASSWORD
 cert: false' > /root/.config/code-server/config.yaml 
 systemctl enable --now code-server@root
+```
