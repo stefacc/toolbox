@@ -5,7 +5,15 @@ PASSGEN=$(</dev/urandom tr -dc _A-Z-a-z-0-9 | head -c12)
 HOSTEDZONE=$(aws route53 list-hosted-zones | jq -r ".HostedZones[0].Id")
 
 yum update -y
+
+# GIT
 yum install -y git
+
+# NODE 16
+curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.3/install.sh | bash
+. ~/.nvm/nvm.sh
+nvm install 16
+
 export HOME=/root
 mkdir -p /root/.config/code-server
 mkdir -p /root/.local/share/code-server/Machine
