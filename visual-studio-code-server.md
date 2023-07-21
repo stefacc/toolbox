@@ -4,7 +4,8 @@
 PASSGEN=$(</dev/urandom tr -dc _A-Z-a-z-0-9 | head -c12)
 HOSTEDZONE=$(aws route53 list-hosted-zones | jq -r ".HostedZones[0].Id")
 
-#apt update
+yum update -y
+yum install -y git
 export HOME=/root
 mkdir -p /root/.config/code-server
 mkdir -p /root/.local/share/code-server/Machine
