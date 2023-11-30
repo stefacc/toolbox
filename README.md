@@ -24,6 +24,7 @@
 - [atlassian bamboo](bamboo.md)
 ### ssh-certs
 - [certs](ssh/certs.md)
+- [create certs with custom ca](ssh/custom-ca.md)
 ### versioning
 - [git](git.md)
 ### windows
