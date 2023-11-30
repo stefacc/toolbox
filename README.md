@@ -18,6 +18,7 @@
 ### js
 - [async/await](js/async-await.js)
 - [in browser jquery](js/jquery.js)
+- [pm2](js/pm2.md)
 ### pipelining
 - [atlassian bamboo](bamboo.md)
 ### spying
