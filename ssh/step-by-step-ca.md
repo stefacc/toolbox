@@ -31,16 +31,50 @@ AwEHoUQDQgAEeciXcZMMEti1SwxMDUtNyvpyq1IZWfv/ofiWL+e8SVUizUJ0uUxm
 my-key.pub
 ecdsa-sha2-nistp256 AAAAE2VjZHNhLXNoYTItbmlzdHAyNTYAAAAIbmlzdHAyNTYAAABBBHnIl3GTDBLYtUsMTA1LTcr6cqtSGVn7/6H4li/nvElVIs1CdLlMZuTCM/x9hpj
 ```
-## create certificates with custom-ca
-### generate private key
+### sign my-key.pub using CA
 ```
-openssl genrsa -out verification_cert_key_filename.key 2048
+ssh-keygen -s ./ca -I testing-my-ca -n user1,user2 -V +1w -z 1 ./my-key.pub
+
+
+
+my-key-cert.pub
+ecdsa-sha2-nistp256-cert-v01@openssh.com AAAAKGVjZHNhLXNoYTItbmlzdHAyNTYtY2VydC12MDFAb3BlbnNzaC5jb20AAAAgpAURhTf5sRC6x1A+zHXZX/26hZXjYY
 ```
-### create Certificate Signing Request
+### info about cert
 ```
-openssl req -new -key verification_cert_key_filename.key -out verification_cert_csr_filename.csr
+ssh-keygen -L -f ./my-key-cert.pub
+
+
+
+./my-key-cert.pub:
+Type: ecdsa-sha2-nistp256-cert-v01@openssh.com user certificate
+Public key: ECDSA-CERT SHA256:reZYAy81/1QPDvgAC9ktZ2fJd9P3ZbvkHQfiFj1t5zg
+Signing CA: ECDSA SHA256:DldnVFM/w4+C2mingaOzF2yqoHpSZDrAs90PZBET2tc
+Key ID: "testing-my-ca"
+Serial: 1
+Valid: from 2021-03-11T10:00:00 to 2021-03-18T10:01:30
+Principals:
+user1
+user2
+Critical Options: (none)
+Extensions:
+permit-X11-forwarding
+permit-agent-forwarding
+permit-port-forwarding
+permit-pty
+permit-user-rc
 ```
-### create a private key verification certificate
+### set sshd_config
 ```
-openssl x509 -req -in verification_cert_csr_filename.csr -CA root_CA_cert_filename.pem -CAkey root_CA_key_filename.key -CAcreateserial -out verification_cert_filename.pem -days 365 -sha256
+HostKey /etc/ssh/my-key
+HostCertificate /etc/ssh/my-key-cert.pub
+TrustedUserCAKeys /etc/ssh/ca.pub
+AuthorizedPrincipalsFile /etc/ssh/auth_principals/%u
+
+con two text files in /etc/ssh/auth_principals/*
+- ./user1
+-- user1
+-- user2
+- ./user2
+-- user2
 ```
