@@ -73,8 +73,16 @@ AuthorizedPrincipalsFile /etc/ssh/auth_principals/%u
 
 con two text files in /etc/ssh/auth_principals/*
 - ./user1
--- user1
--- user2
+----- user1
+----- user2
 - ./user2
--- user2
+----- user2
+```
+### verify/show CA from client-side-cert
+```
+sudo ssh-keygen -L -f ./ssh-certs-generated/client-side-cert.pub | fgrep "Signing CA" | sed 's/^[ \t]*//' | cut -d ' ' -f 4
+```
+### verify/show CA from CA.pub
+```
+sudo ssh-keygen -l -f ./ssh-certs/user_ca_keys.pub | cut -d ' ' -f 2
 ```
