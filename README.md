@@ -21,6 +21,8 @@
 - [pm2](js/pm2.md)
 ### pipelining
 - [atlassian bamboo](bamboo.md)
+### ssh-certs
+- [certs](ssh/certs.md)
 ### versioning
 - [git](git.md)
 ### windows
