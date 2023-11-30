@@ -23,6 +23,8 @@
 - [atlassian bamboo](bamboo.md)
 ### spying
 - [whatsapp-onliner](whatsapp-onliner.md)
+### ssh-certs
+- [certs](ssh/certs.md)
 ### versioning
 - [git](git.md)
 ### windows
