@@ -9,6 +9,7 @@
 - [alpine](containerizing/alpine.md)
 - [buildx](containerizing/buildx.md)
 - [docker](containerizing/docker.md)
+- [kubectl](containerizing/kubectl.md)
 ### fast-utility
 - [fast-local-webserver](fast-local-webserver.md)
 - [visual-studio-code-server](visual-studio-code-server.md)
