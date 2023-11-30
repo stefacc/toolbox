@@ -11,6 +11,7 @@
 - [docker](containerizing/docker.md)
 ### fast-utility
 - [fast-local-webserver](fast-local-webserver.md)
+- [visual-studio-code-server](visual-studio-code-server.md)
 ### fluent-bit
 - [client.ts](fluent-bit/client.ts)
 - [dockerfile](fluent-bit/dockerfile)
