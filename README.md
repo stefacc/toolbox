@@ -27,6 +27,7 @@
 ### ssh-certs
 - [certs](ssh/certs.md)
 - [create certs with custom ca](ssh/custom-ca.md)
+- [step-by-step-ca](ssh/step-by-step-ca.md)
 ### versioning
 - [git](git.md)
 ### windows
