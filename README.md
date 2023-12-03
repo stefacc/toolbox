@@ -10,9 +10,9 @@
 - [buildx](containerizing/buildx.md)
 - [docker](containerizing/docker.md)
 - [kubectl](containerizing/kubectl.md)
-### fast-utility
-- [fast-local-webserver](fast-local-webserver.md)
-- [visual-studio-code-server](visual-studio-code-server.md)
+### fast-utilities
+- [fast-local-webserver](fast-utilities/fast-local-webserver.md)
+- [visual-studio-code-server](fast-utilities/visual-studio-code-server.md)
 ### fluent-bit
 - [client.ts](fluent-bit/client.ts)
 - [dockerfile](fluent-bit/dockerfile)
