@@ -5,6 +5,7 @@
 ### commands
 - [linux](linux.md)
 - [screen](screen.md)
+- [json](json.md)
 ### containerizing
 - [alpine](containerizing/alpine.md)
 - [buildx](containerizing/buildx.md)
