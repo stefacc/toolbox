@@ -15,6 +15,18 @@ find -name "*.js" -not -path "./PATH_A/*"
 ```
 sed -i 's/FROM/TO/' file
 ```
+### remove first char of string if char == CHAR, if CHAR == . remove first char
+```
+sed 's/^CHAR//'
+```
+### remove last char of string if char == CHAR, if CHAR == . remove last char
+```
+sed 's/CHAR$//'
+```
+### change \\" to ", useful when a json string is embedded in a json
+```
+sed 's/\\"/"/g'
+```
 ### replace string A with string B, in-file *.txt named, excluding path C and path D in all sub-directories
 ```
 find . -type f -name "*.txt" -not \( -path "./PATH_C/*" -prune \) -not \( -path "*/PATH_D*" -prune \) -exec sed -i 's/STRING_A/STRING_B/g' {} +
