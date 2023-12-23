@@ -1,4 +1,8 @@
 # linux
+## get name of current directory without full path
+```
+CURRENT_DIR=${$PWD##*/}
+```
 ## add full permission to folder and subfolder
 ```
 sudo mkdir /var/directory
