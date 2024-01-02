@@ -22,6 +22,7 @@
 - [dockerfile](fluent-bit/dockerfile)
 - [fluent-bit.conf](fluent-bit/fluent-bit.conf)
 ### js
+- [links](js/links.md)
 - [async/await](js/async-await.js)
 - [in browser jquery](js/jquery.js)
 - [pm2](js/pm2.md)
