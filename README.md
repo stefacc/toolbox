@@ -21,7 +21,7 @@
 - [client.ts](fluent-bit/client.ts)
 - [dockerfile](fluent-bit/dockerfile)
 - [fluent-bit.conf](fluent-bit/fluent-bit.conf)
-### js
+### js/nodejs/typescript
 - [links](js/links.md)
 - [async/await](js/async-await.js)
 - [in browser jquery](js/jquery.js)
