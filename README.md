@@ -1,7 +1,8 @@
 # toolbox
 ### aws
-- [ec2](aws/ec2.md)
-- [ecr](aws/ecr.md)
+- [CloudFormation](aws/cloudformation.md)
+- [EC2](aws/ec2.md)
+- [ECR](aws/ecr.md)
 ### bot
 - [telegram](bot/telegram-python.py)
 ### commands
