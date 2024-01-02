@@ -29,7 +29,7 @@
 ### pipelining
 - [atlassian bamboo](bamboo.md)
 ### python
-- python.md
+- [python](python.md)
 ### ssh-certs
 - [certs](ssh/certs.md)
 - [create certs with custom ca](ssh/custom-ca.md)
