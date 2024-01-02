@@ -2,6 +2,8 @@
 ### aws
 - [ec2](aws/ec2.md)
 - [ecr](aws/ecr.md)
+### bot
+- [telegram](bot/telegram-python.py)
 ### commands
 - [linux](linux.md)
 - [screen](screen.md)
