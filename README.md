@@ -28,6 +28,8 @@
 - [pm2](js/pm2.md)
 ### pipelining
 - [atlassian bamboo](bamboo.md)
+### python
+- python.md
 ### spying
 - [whatsapp-onliner](whatsapp-onliner.md)
 ### ssh-certs
