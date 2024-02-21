@@ -1,4 +1,9 @@
-## Environment Variables
+## virtual env
+### get version of libraries when using virtual enviroment
+```
+ls -d *.dist-info
+```
+## environment variables
 ### How to Set and Get Environment Variables in Python
 https://able.bio/rhett/how-to-set-and-get-environment-variables-in-python--274rgt5
 ### Python Env Vars – How to Get an Environment Variable in Python
