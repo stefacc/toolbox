@@ -46,3 +46,8 @@ find "PATH_C" -type f -name "*.txt" -exec sed -i '/STRING_A/,/STRING_B/d' {} +
 ```
 ls -d *.dist-info
 ```
+## copy
+### create link cp to copy
+```
+ln -s /bin/cp /bin/copy
+```
