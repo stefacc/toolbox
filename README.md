@@ -5,6 +5,7 @@
 - [EC2](aws/ec2.md)
 - [ECR](aws/ecr.md)
 - [S3 on Windows](aws/s3.md)
+- [GreenGrass](aws/gg.md)
 ### bot
 - [telegram](bot/telegram-python.py)
 ### commands
