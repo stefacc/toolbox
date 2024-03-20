@@ -16,7 +16,7 @@ curl -s https://d2s8p88vqu9w66.cloudfront.net/releases/greengrass-nucleus-latest
 export AWS_ACCESS_KEY_ID=XXXXXXXXXXXXXXXXXXX
 export AWS_SECRET_ACCESS_KEY=XXXXXXXXXXXXXXXXXXX
 
-java -Droot="/greengrass/v2" -Dlog.store=FILE -jar ./GreengrassCore/lib/Greengrass.jar --aws-region us-east-1 --thing-name thingDevice-001 --component-default-user ggc_user:ggc_group --provision true --setup-system-service true --deploy-dev-tools true
+java -Droot="/greengrass/v2" -Dlog.store=FILE -jar ./GreengrassCore/lib/Greengrass.jar --aws-region us-east-1 --thing-name coreDevice-001 --component-default-user ggc_user:ggc_group --provision true --setup-system-service true --deploy-dev-tools true
 
 # sudo /greengrass/v2/alts/current/distro/bin/loader
 ```
