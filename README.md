@@ -17,6 +17,7 @@
 - [buildx](containerizing/buildx.md)
 - [docker](containerizing/docker.md)
 - [kubectl](containerizing/kubectl.md)
+- [java](containerizing/java.md)
 ### fast-utilities
 - [fast-local-webserver](fast-utilities/fast-local-webserver.md)
 - [mosquitto](fast-utilities/mosquitto.md)
