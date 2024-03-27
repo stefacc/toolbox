@@ -8,10 +8,11 @@
 - [S3 on Windows](aws/s3.md)
 ### bot
 - [telegram](bot/telegram-python.py)
-### commands
-- [linux](linux.md)
-- [screen](screen.md)
-- [json](json.md)
+### linux
+- [commands](linux/commands.md)
+- [screen](linux/screen.md)
+- [json](linux/json.md)
+- [systemd](linux/systemd.md)
 ### containerizing
 - [alpine](containerizing/alpine.md)
 - [buildx](containerizing/buildx.md)
