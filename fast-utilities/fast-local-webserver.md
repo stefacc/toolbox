@@ -1,4 +1,4 @@
-# debian container to run in docker-compose
+# server python to expose files
 ## python 2.7
 ```bash
 python -m SimpleHTTPServer 8000
