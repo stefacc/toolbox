@@ -1,4 +1,4 @@
-# fast-local-webserver
+# debian container to run with compose
 ## folder tree
 ![alt text](https://github.com/stefacc/toolbox/blob/main/fast-utilities/tree.jpg?raw=true)
 ## src/start.sh
