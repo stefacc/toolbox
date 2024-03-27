@@ -4,9 +4,7 @@
 #!/bin/bash
 
 yum update -y
-yum install python3 python3-pip unzip zip -y
-
-pip3 install "paho-mqtt<2.0.0"
+yum install unzip zip -y
 
 cd /home/ec2-user
 
