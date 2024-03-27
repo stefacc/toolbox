@@ -19,6 +19,7 @@
 - [kubectl](containerizing/kubectl.md)
 - [java](containerizing/java.md)
 ### fast-utilities
+- [debian-compose](fast-utilities/debian-compose.md)
 - [fast-local-webserver](fast-utilities/fast-local-webserver.md)
 - [mosquitto](fast-utilities/mosquitto.md)
 - [visual-studio-code-server](fast-utilities/visual-studio-code-server.md)
