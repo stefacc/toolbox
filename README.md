@@ -19,6 +19,7 @@
 - [docker](containerizing/docker.md)
 - [kubectl](containerizing/kubectl.md)
 - [java](containerizing/java.md)
+- [mongo](containerizing/mongo.md)
 ### fast-utilities
 - [debian-compose](fast-utilities/debian-compose.md)
 - [fast-local-webserver](fast-utilities/fast-local-webserver.md)
