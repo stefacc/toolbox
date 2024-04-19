@@ -1,4 +1,10 @@
 # windows
+## rename all files with prefix
+in powershell
+```
+$items=Get-ChildItem;
+$items | Rename-Item -NewName { "Prefix_" + $_.Name };
+```
 ## windows 11
 ### how to clean C: unit
 open ``Run`` and launch ``cleanmgr/low disk``
