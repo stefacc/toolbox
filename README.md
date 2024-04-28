@@ -23,9 +23,9 @@
 ### fast-utilities
 - [debian-compose](fast-utilities/debian-compose.md)
 - [fast-local-webserver](fast-utilities/fast-local-webserver.md)
+- [gmail](fast-utilities/gmail.md)
 - [mosquitto](fast-utilities/mosquitto.md)
 - [visual-studio-code-server](fast-utilities/visual-studio-code-server.md)
-- [gmail](fast-utilities/gmail.md)
 ### fluent-bit
 - [client.ts](fluent-bit/client.ts)
 - [dockerfile](fluent-bit/dockerfile)
