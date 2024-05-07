@@ -26,6 +26,7 @@
 - [gmail](fast-utilities/gmail.md)
 - [mosquitto](fast-utilities/mosquitto.md)
 - [visual-studio-code-server](fast-utilities/visual-studio-code-server.md)
+- [jpeg-compressor](fast-utilities/jpeg-compressor.md)
 ### fluent-bit
 - [client.ts](fluent-bit/client.ts)
 - [dockerfile](fluent-bit/dockerfile)
