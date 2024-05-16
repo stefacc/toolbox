@@ -83,3 +83,9 @@ chown mosquitto:mosquitto /var/run/mosquitto
 
 systemctl start mosquitto.service
 ```
+## troubleshooting
+it can happen that mosquitto does not follow properly to the configuration file, this can happen when it is installed via apt and is automatically started as a daemon.
+To restart it and make sure it gets the right conf
+```bash
+sudo service mosquitto restart
+```
