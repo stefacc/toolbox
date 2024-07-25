@@ -33,6 +33,10 @@ sed 's/CHAR$//'
 ```
 sed 's/\\"/"/g'
 ```
+### remove return char (windows -> linux)
+```
+sed -i -e 's/\r$//' FILE
+```
 ### replace string A with string B, in-file *.txt named, excluding path C and path D in all sub-directories
 ```
 find . -type f -name "*.txt" -not \( -path "./PATH_C/*" -prune \) -not \( -path "*/PATH_D*" -prune \) -exec sed -i 's/STRING_A/STRING_B/g' {} +
