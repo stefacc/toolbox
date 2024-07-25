@@ -17,6 +17,20 @@ docker system prune
 ```bash
 docker system prune -a
 ```
+## detach and remove volume
+```bash
+docker compose down --volumes
+```
+```bash
+docker volume rm <VOLUME-NAME>
+```
+## stop and remove all containers
+```bash
+docker stop $(docker ps -a -q)
+```
+```bash
+docker rm $(docker ps -aq)
+```
 ## remove image
 - image
 ```bash
