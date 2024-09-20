@@ -9,9 +9,10 @@
 ### bot
 - [telegram](bot/telegram-python.py)
 ### linux
+- [bash](linux/bash.md)
 - [commands](linux/commands.md)
-- [screen](linux/screen.md)
 - [json](linux/json.md)
+- [screen](linux/screen.md)
 - [systemd](linux/systemd.md)
 ### containerizing
 - [alpine](containerizing/alpine.md)
