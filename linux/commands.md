@@ -1,4 +1,4 @@
-# linux
+# commands
 ## get name of current directory without full path
 ```
 CURRENT_DIR=${$PWD##*/}
