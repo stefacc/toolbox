@@ -5,6 +5,8 @@
 - [EC2](aws/ec2.md)
 - [ECR](aws/ecr.md)
 - [GreenGrass](aws/gg.md)
+- [Lambda](aws/lambda.md)
+- [OpenSearch Service](aws/opensearch.md)
 - [S3 on Windows](aws/s3.md)
 ### bot
 - [telegram](bot/telegram-python.py)
