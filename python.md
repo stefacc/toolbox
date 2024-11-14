@@ -1,4 +1,25 @@
 ## virtual env
+### how to use *args and **kwargs
+```
+def sum(*args):
+    z = 1
+    for num in args:
+        z += num
+    print(z)
+
+sum(4, 5) => 9
+sum(2, 4, 4) => 10
+```
+```
+def print_kwargs(**kwargs):
+    for key, value in kwargs.items():
+        print("The value of {} is {}".format(key, value))
+
+print_values(name="Nicola", nickname="Babbo Natale")
+
+The value of name is Nicola
+The value of nickname is Babbo Natale
+```
 ### get version of libraries when using virtual enviroment
 ```
 ls -d *.dist-info
