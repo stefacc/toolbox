@@ -1,6 +1,7 @@
 # opensearch
 https://www.youtube.com/watch?v=hPc1ecsxRBU
 ## send data to opensearch service
+https://docs.aws.amazon.com/opensearch-service/latest/developerguide/gsgupload-data.html
 ```bash
 # add one doc with index
 curl -XPUT -u 'USERNAME:PASSWORD' 'ENDPOINT/INDEX/_doc/ID' -d '{"name": "Marco", "surname": "Rossi"}' -H 'Content-Type: application/json'
