@@ -8,6 +8,7 @@
 - [Lambda](aws/lambda.md)
 - [OpenSearch Service](aws/opensearch.md)
 - [S3 on Windows](aws/s3.md)
+- [EXTERNAL - S3 uploading using HTTP POST](https://www.youtube.com/watch?v=yt38b_Ave6I)
 ### bot
 - [telegram](bot/telegram-python.py)
 ### linux
