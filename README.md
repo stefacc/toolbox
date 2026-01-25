@@ -53,3 +53,8 @@
 - [git](git.md)
 ### windows
 - [windows](windows.md)
+### miscellaneous
+- [EXTERNAL - gps-geographic coordinate converter](https://www.coordinate-gps.it/)
+- [EXTERNAL - nmea-gmaps converter](https://www.gonmad.co.uk/nmea.php)
+- [EXTERNAL - latitude and longitude finder](https://www.latlong.net/)
+- [EXTERNAL - distance calculator](https://www.sunearthtools.com/it/tools/distance.php) 
