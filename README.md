@@ -30,6 +30,8 @@
 - [jpeg-compressor](fast-utilities/jpeg-compressor.md)
 - [mosquitto](fast-utilities/mosquitto.md)
 - [visual-studio-code-server](fast-utilities/visual-studio-code-server.md)
+- [EXTERNAL - tools base64, base32 etc](https://tomeko.net/online_tools/base64.php?lang=en)
+- [EXTERNAL - ASCII converter](https://www.branah.com/ascii-converter)
 ### fluent-bit
 - [client.ts](fluent-bit/client.ts)
 - [dockerfile](fluent-bit/dockerfile)
