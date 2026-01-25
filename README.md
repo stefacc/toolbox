@@ -61,3 +61,5 @@
 - [EXTERNAL - nmea-gmaps converter](https://www.gonmad.co.uk/nmea.php)
 - [EXTERNAL - latitude and longitude finder](https://www.latlong.net/)
 - [EXTERNAL - distance calculator](https://www.sunearthtools.com/it/tools/distance.php) 
+### electronics
+- [EXTERNAL - findchips](https://www.findchips.com/)
