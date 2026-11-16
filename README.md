@@ -57,6 +57,7 @@
 - [git](git.md)
 ### windows
 - [windows](windows.md)
+- [overlay - overlay verde su una zona dello schermo, click automatico al cambio di stato](windows/overlay/README.md)
 ### miscellaneous
 - [EXTERNAL - gps-geographic coordinate converter](https://www.coordinate-gps.it/)
 - [EXTERNAL - nmea-gmaps converter](https://www.gonmad.co.uk/nmea.php)
