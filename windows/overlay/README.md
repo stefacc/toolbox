@@ -1,36 +1,36 @@
-# overlay - trigger visivo su una zona dello schermo
+# overlay - visual trigger on a screen zone
 
-Mette un overlay verde semitrasparente su una zona dello schermo, la osserva e,
-quando la zona passa dallo **stato X** allo **stato Y**, esegue un'azione (click).
+Puts a semi-transparent green overlay on a zone of the screen, watches it and,
+when the zone changes from **state X** to **state Y**, performs an action (click).
 
-Solo Windows. Unica dipendenza: Pillow.
+Windows only. Single dependency: Pillow.
 
 ```
 pip install -r requirements.txt
 python overlay.py
 ```
 
-## Uso
+## Usage
 
-1. **Seleziona zona** - trascina un rettangolo sullo schermo (Esc annulla).
-2. **Cattura stato X** - salva l'aspetto attuale della zona (stato di partenza).
-3. **Cattura stato Y** - porta la zona nello stato che deve far scattare l'azione e cattura.
-4. **Punto click (3s)** - entro 3 secondi porta il mouse dove cliccare.
-   Se non impostato, clicca al centro della zona.
-5. **Avvia** o **F8** - avvia il monitoraggio. F8 lo ferma da qualsiasi finestra.
+1. **Select zone** - drag a rectangle on the screen (Esc cancels).
+2. **Capture state X** - saves how the zone looks now (starting state).
+3. **Capture state Y** - bring the zone to the state that should trigger the action and capture.
+4. **Click point (3s)** - within 3 seconds move the mouse where it should click.
+   If not set, it clicks the center of the zone.
+5. **Start** or **F8** - starts monitoring. F8 stops it from any window.
 
-## Come funziona
+## How it works
 
-- L'overlay e' **click-through**: i click lo attraversano.
-- L'overlay e' **escluso dalle catture dello schermo** (`SetWindowDisplayAffinity`),
-  quindi il verde non falsa il confronto.
-- Ogni lettura viene ridotta a 32x32 e confrontata con le immagini di riferimento:
-  la "distanza" (0-255) e' mostrata in tempo reale. Sotto la **soglia** lo stato e'
-  riconosciuto, altrimenti e' `?` e non succede nulla.
-- Uno stato deve restare uguale per 2 letture di fila prima di contare; dopo un'azione
-  c'e' un **cooldown** (default 1 s).
-- Azioni: click sinistro, doppio click, click destro; opzione per riportare il mouse
-  dov'era.
+- The overlay is **click-through**: clicks go through it.
+- The overlay is **excluded from screen captures** (`SetWindowDisplayAffinity`),
+  so the green tint doesn't skew the comparison.
+- Each reading is scaled down to 32x32 and compared with the reference images:
+  the "distance" (0-255) is shown live. Below the **threshold** the state is
+  recognized, otherwise it is `?` and nothing happens.
+- A state must stay the same for 2 consecutive readings before it counts; after an
+  action there is a **cooldown** (default 1 s).
+- Actions: left click, double click, right click; option to move the mouse back
+  where it was.
 
-Zona, punto, impostazioni e immagini di riferimento vengono salvati accanto allo
-script (`config.json`, `stato_X.png`, `stato_Y.png`) e ricaricati all'avvio.
+Zone, click point, settings and reference images are saved next to the script
+(`config.json`, `state_X.png`, `state_Y.png`) and reloaded at startup.

@@ -1,7 +1,7 @@
 AWSTemplateFormatVersion: "2010-09-09"
 Description: >
-  itov - ComfyUI + Wan 2.2 14B image-to-video su GPU privata.
-  Nessuna porta in ingresso (accesso solo via SSM), disco e bucket cifrati.
+  itov - ComfyUI + Wan 2.2 14B image-to-video on a private GPU.
+  No inbound ports (SSM-only access), encrypted disk and bucket.
 
 Parameters:
   InstanceType:
@@ -15,17 +15,17 @@ Parameters:
   AvailabilityZone:
     Type: String
     Default: ""
-    Description: Opzionale. Vuoto = AZ scelta da AWS.
+    Description: Optional. Empty = AZ chosen by AWS.
   AmiId:
     Type: AWS::SSM::Parameter::Value<AWS::EC2::Image::Id>
     Default: /aws/service/deeplearning/ami/x86_64/base-oss-nvidia-driver-gpu-ubuntu-24.04/latest/ami-id
-    Description: AWS Deep Learning Base AMI (driver NVIDIA gia' installati).
+    Description: AWS Deep Learning Base AMI (NVIDIA drivers preinstalled).
 
 Conditions:
   HasAz: !Not [!Equals [!Ref AvailabilityZone, ""]]
 
 Resources:
-  # ---------- Storage privato per input/output ----------
+  # ---------- Private storage for input/output ----------
   DataBucket:
     Type: AWS::S3::Bucket
     DeletionPolicy: Retain
@@ -58,7 +58,7 @@ Resources:
               - !Sub "${DataBucket.Arn}/*"
             Condition: { Bool: { "aws:SecureTransport": "false" } }
 
-  # ---------- Permessi istanza: solo SSM + il proprio bucket ----------
+  # ---------- Instance permissions: SSM + its own bucket only ----------
   InstanceRole:
     Type: AWS::IAM::Role
     Properties:
@@ -87,11 +87,11 @@ Resources:
     Properties:
       Roles: [!Ref InstanceRole]
 
-  # Nessuna regola in ingresso: niente SSH, niente porte aperte.
+  # No inbound rules: no SSH, no open ports.
   NoIngressSG:
     Type: AWS::EC2::SecurityGroup
     Properties:
-      GroupDescription: itov - no inbound, accesso solo via SSM
+      GroupDescription: itov - no inbound, SSM-only access
 
   LaunchTemplate:
     Type: AWS::EC2::LaunchTemplate
@@ -126,7 +126,7 @@ Resources:
       UserData:
         Fn::Base64: |
           #!/bin/bash
-          # Primo avvio: installa ComfyUI + Wan 2.2 14B. Log: /var/log/itov-setup.log
+          # First boot: installs ComfyUI + Wan 2.2 14B. Log: /var/log/itov-setup.log
           exec > /var/log/itov-setup.log 2>&1
           set -euxo pipefail
           export DEBIAN_FRONTEND=noninteractive
@@ -136,7 +136,7 @@ Resources:
           apt-get update
           apt-get install -y git python3-venv python3-pip ffmpeg aria2
 
-          # swap: aiuta quando i due modelli 14B si alternano in RAM
+          # swap: helps when the two 14B models alternate in RAM
           [ -f /swapfile ] || { fallocate -l 32G /swapfile; chmod 600 /swapfile; mkswap /swapfile; swapon /swapfile; echo "/swapfile none swap sw 0 0" >> /etc/fstab; }
 
           id comfy || useradd -m -s /bin/bash comfy
@@ -148,7 +148,7 @@ Resources:
           /opt/comfyui/venv/bin/pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu128
           /opt/comfyui/venv/bin/pip install -r /opt/comfyui/requirements.txt
 
-          # --- Modelli Wan 2.2 I2V 14B (fp8, ~35GB) ---
+          # --- Wan 2.2 I2V 14B models (fp8, ~35GB) ---
           cat > /opt/itov/download-models.sh <<'EOF'
           #!/bin/bash
           set -euo pipefail
@@ -168,11 +168,11 @@ Resources:
 
           chown -R comfy:comfy /opt/comfyui
 
-          # Disattiva i nodi "API" (servizi esterni a pagamento) se la versione lo supporta
+          # Disable the "API" nodes (paid external services) if the version supports it
           EXTRA=""
           if /opt/comfyui/venv/bin/python /opt/comfyui/main.py --help 2>/dev/null | grep -q -- --disable-api-nodes; then EXTRA="--disable-api-nodes"; fi
 
-          # Ascolta SOLO su localhost: si raggiunge esclusivamente via tunnel SSM
+          # Listens ONLY on localhost: reachable exclusively through the SSM tunnel
           cat > /etc/systemd/system/comfyui.service <<EOF
           [Unit]
           Description=ComfyUI
@@ -187,10 +187,10 @@ Resources:
           WantedBy=multi-user.target
           EOF
 
-          # --- Sync con S3 (input <- bucket, output -> bucket) ---
+          # --- S3 sync (input <- bucket, output -> bucket) ---
           cat > /opt/itov/s3-sync.sh <<'EOF'
           #!/bin/bash
-          # uso: s3-sync.sh <bucket> pull|push|wipe
+          # usage: s3-sync.sh <bucket> pull|push|wipe
           set -euo pipefail
           B=$1; C=/opt/comfyui
           case $2 in
@@ -202,8 +202,8 @@ Resources:
           EOF
           chmod +x /opt/itov/s3-sync.sh
 
-          # --- Auto-spegnimento dopo 30 min di inattivita' ---
-          # attivo = GPU in uso OPPURE una scheda ComfyUI aperta (tunnel connesso)
+          # --- Auto-shutdown after 30 min of inactivity ---
+          # active = GPU in use OR a ComfyUI tab open (tunnel connected)
           cat > /opt/itov/idle-check.sh <<'EOF'
           #!/bin/bash
           IDLE_MIN=30
@@ -213,7 +213,7 @@ Resources:
           CONN=$(ss -Htn state established '( sport = :8188 )' | wc -l)
           if [ "${GPU:-0}" -gt 10 ] || [ "$CONN" -gt 0 ] || [ ! -e $F ]; then date +%s > $F; exit 0; fi
           if [ $(( $(date +%s) - $(cat $F) )) -gt $(( IDLE_MIN * 60 )) ]; then
-            logger "itov: inattiva da ${IDLE_MIN} min, spengo"; rm -f $F; shutdown -h now
+            logger "itov: idle for ${IDLE_MIN} min, shutting down"; rm -f $F; shutdown -h now
           fi
           EOF
           chmod +x /opt/itov/idle-check.sh
@@ -229,7 +229,7 @@ Resources:
           [Install]
           WantedBy=timers.target
           EOF
-          # al boot il contatore riparte da zero
+          # the counter restarts from zero at boot
           echo 'd /opt/itov 0755 root root -' > /etc/tmpfiles.d/itov.conf
           echo 'r /opt/itov/last_active' >> /etc/tmpfiles.d/itov.conf
 
@@ -237,7 +237,7 @@ Resources:
           systemctl enable --now comfyui.service itov-idle.timer
           rm -f /opt/itov/SETUP_IN_PROGRESS
           touch /opt/itov/SETUP_DONE
-          echo "ITOV SETUP COMPLETATO"
+          echo "ITOV SETUP DONE"
 
 Outputs:
   InstanceId:

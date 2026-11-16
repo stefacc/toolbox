@@ -1,7 +1,7 @@
 import json, time, urllib.request
 from PIL import Image, ImageDraw
 
-# immagine sintetica di prova
+# synthetic test image
 W, H = 832, 480
 img = Image.new("RGB", (W, H))
 d = ImageDraw.Draw(img)
@@ -39,7 +39,7 @@ req = urllib.request.Request(API + "/prompt", data=json.dumps({"prompt": wf}).en
 try:
     pid = json.load(urllib.request.urlopen(req))["prompt_id"]
 except urllib.error.HTTPError as e:
-    print("ERRORE workflow:", e.read().decode()[:2000]); raise SystemExit(1)
+    print("workflow ERROR:", e.read().decode()[:2000]); raise SystemExit(1)
 
 t0 = time.time()
 while True:
@@ -47,7 +47,7 @@ while True:
     h = json.load(urllib.request.urlopen(f"{API}/history/{pid}"))
     if pid in h:
         st = h[pid]["status"]
-        print("stato:", st.get("status_str"), "| tempo: %.0f s" % (time.time() - t0))
+        print("status:", st.get("status_str"), "| time: %.0f s" % (time.time() - t0))
         if st.get("status_str") != "success":
             print(json.dumps(st.get("messages", []))[-2000:])
         for n in h[pid]["outputs"].values():

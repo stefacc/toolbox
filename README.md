@@ -8,7 +8,7 @@
 - [Lambda](aws/lambda.md)
 - [OpenSearch Service](aws/opensearch.md)
 - [S3 on Windows](aws/s3.md)
-- [itov - image-to-video privato su GPU (ComfyUI + Wan 2.2)](aws/itov/README.md)
+- [itov - private image-to-video on GPU (ComfyUI + Wan 2.2)](aws/itov/README.md)
 - [EXTERNAL - S3 uploading using HTTP POST](https://www.youtube.com/watch?v=yt38b_Ave6I)
 ### bot
 - [telegram](bot/telegram-python.py)
@@ -57,7 +57,7 @@
 - [git](git.md)
 ### windows
 - [windows](windows.md)
-- [overlay - overlay verde su una zona dello schermo, click automatico al cambio di stato](windows/overlay/README.md)
+- [overlay - green overlay on a screen zone, automatic click on state change](windows/overlay/README.md)
 ### miscellaneous
 - [EXTERNAL - gps-geographic coordinate converter](https://www.coordinate-gps.it/)
 - [EXTERNAL - nmea-gmaps converter](https://www.gonmad.co.uk/nmea.php)
