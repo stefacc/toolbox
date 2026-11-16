@@ -1,17 +1,17 @@
 """
-Overlay Trigger - overlay verde su una zona dello schermo che osserva lo stato
-della zona e, quando passa dallo stato X allo stato Y, esegue un'azione (click).
+Overlay Trigger - green overlay on a screen zone that watches the zone's state and,
+when it changes from state X to state Y, performs an action (click).
 
-Uso:
-  1. "Seleziona zona"      -> trascina un rettangolo sullo schermo (Esc annulla)
-  2. "Cattura stato X"     -> fotografa la zona com'e' adesso (stato di partenza)
-  3. "Cattura stato Y"     -> fotografa la zona nello stato che fa scattare l'azione
-  4. "Punto click"         -> entro 3 secondi porta il mouse dove vuoi cliccare
-                              (se non impostato: centro della zona)
-  5. "Avvia" (o F8)        -> monitoraggio attivo; F8 in qualsiasi momento ferma tutto
+Usage:
+  1. "Select zone"      -> drag a rectangle on the screen (Esc cancels)
+  2. "Capture state X"  -> snapshots the zone as it is now (starting state)
+  3. "Capture state Y"  -> snapshots the zone in the state that triggers the action
+  4. "Click point"      -> within 3 seconds move the mouse where you want to click
+                           (if not set: center of the zone)
+  5. "Start" (or F8)    -> monitoring on; F8 stops everything at any time
 
-L'overlay e' "click-through" (i click lo attraversano) ed e' escluso dalle catture
-dello schermo, quindi il verde non falsa il confronto delle immagini.
+The overlay is click-through (clicks go through it) and is excluded from screen
+captures, so the green tint doesn't skew the image comparison.
 """
 
 import ctypes
@@ -24,7 +24,7 @@ from tkinter import ttk
 
 from PIL import Image, ImageChops, ImageGrab, ImageStat, ImageTk
 
-# Coordinate in pixel fisici anche con scaling di Windows al 125%/150%
+# Physical pixel coordinates even with Windows scaling at 125%/150%
 try:
     ctypes.windll.shcore.SetProcessDpiAwareness(2)
 except Exception:
@@ -41,21 +41,23 @@ WDA_EXCLUDEFROMCAPTURE = 0x11
 VK_F8 = 0x77
 
 MOUSE = {
-    "click sinistro": (0x0002, 0x0004, 1),
-    "doppio click": (0x0002, 0x0004, 2),
-    "click destro": (0x0008, 0x0010, 1),
+    "left click": (0x0002, 0x0004, 1),
+    "double click": (0x0002, 0x0004, 2),
+    "right click": (0x0008, 0x0010, 1),
 }
+# action names used by older (Italian) versions of config.json
+LEGACY_ACTIONS = {"click sinistro": "left click", "doppio click": "double click", "click destro": "right click"}
 
 BASE = os.path.dirname(os.path.abspath(__file__))
 CFG_PATH = os.path.join(BASE, "config.json")
 DEFAULTS = {
     "region": None,          # [left, top, right, bottom]
     "click_point": None,     # [x, y]
-    "threshold": 12.0,       # distanza massima (0-255) per riconoscere uno stato
+    "threshold": 12.0,       # max distance (0-255) to recognize a state
     "interval_ms": 200,
-    "stable_frames": 2,      # quante letture consecutive servono per confermare uno stato
+    "stable_frames": 2,      # consecutive readings needed to confirm a state
     "cooldown_s": 1.0,
-    "action": "click sinistro",
+    "action": "left click",
     "restore_cursor": True,
     "overlay_alpha": 0.30,
 }
@@ -101,6 +103,12 @@ def mouse_click(x, y, action, restore):
         user32.SetCursorPos(old.x, old.y)
 
 
+def ref_path(key):
+    path = os.path.join(BASE, f"state_{key}.png")
+    legacy = os.path.join(BASE, f"stato_{key}.png")
+    return legacy if not os.path.exists(path) and os.path.exists(legacy) else path
+
+
 class App:
     def __init__(self):
         self.cfg = dict(DEFAULTS)
@@ -110,8 +118,11 @@ class App:
                     self.cfg.update(json.load(f))
             except Exception:
                 pass
+        self.cfg["action"] = LEGACY_ACTIONS.get(self.cfg["action"], self.cfg["action"])
+        if self.cfg["action"] not in MOUSE:
+            self.cfg["action"] = DEFAULTS["action"]
 
-        self.refs = {"X": None, "Y": None}      # firme 32x32
+        self.refs = {"X": None, "Y": None}      # 32x32 signatures
         self.thumbs = {}
         self.running = False
         self.stable = None
@@ -134,7 +145,7 @@ class App:
         self.overlay.withdraw()
 
         for key in ("X", "Y"):
-            path = os.path.join(BASE, f"stato_{key}.png")
+            path = ref_path(key)
             if os.path.exists(path) and self.cfg["region"]:
                 self.set_ref(key, Image.open(path).convert("RGB"), save=False)
 
@@ -148,10 +159,10 @@ class App:
         pad = {"padx": 6, "pady": 3}
         top = ttk.Frame(r)
         top.pack(fill="x", **pad)
-        ttk.Button(top, text="1. Seleziona zona", command=self.select_region).pack(side="left", padx=2)
-        ttk.Button(top, text="2. Cattura stato X", command=lambda: self.capture_ref("X")).pack(side="left", padx=2)
-        ttk.Button(top, text="3. Cattura stato Y", command=lambda: self.capture_ref("Y")).pack(side="left", padx=2)
-        ttk.Button(top, text="4. Punto click (3s)", command=self.pick_point).pack(side="left", padx=2)
+        ttk.Button(top, text="1. Select zone", command=self.select_region).pack(side="left", padx=2)
+        ttk.Button(top, text="2. Capture state X", command=lambda: self.capture_ref("X")).pack(side="left", padx=2)
+        ttk.Button(top, text="3. Capture state Y", command=lambda: self.capture_ref("Y")).pack(side="left", padx=2)
+        ttk.Button(top, text="4. Click point (3s)", command=self.pick_point).pack(side="left", padx=2)
 
         self.info = ttk.Label(r, text="")
         self.info.pack(anchor="w", **pad)
@@ -160,15 +171,15 @@ class App:
         refs.pack(fill="x", **pad)
         self.ref_labels = {}
         for key in ("X", "Y"):
-            box = ttk.LabelFrame(refs, text=f"Stato {key}")
+            box = ttk.LabelFrame(refs, text=f"State {key}")
             box.pack(side="left", padx=4)
-            lbl = ttk.Label(box, text="(non catturato)", width=22, anchor="center")
+            lbl = ttk.Label(box, text="(not captured)", width=22, anchor="center")
             lbl.pack(padx=4, pady=4)
             self.ref_labels[key] = lbl
 
         live = ttk.Frame(r)
         live.pack(fill="x", **pad)
-        self.state_lbl = ttk.Label(live, text="Stato: -", font=("Segoe UI", 12, "bold"))
+        self.state_lbl = ttk.Label(live, text="State: -", font=("Segoe UI", 12, "bold"))
         self.state_lbl.pack(side="left")
         self.dist_lbl = ttk.Label(live, text="")
         self.dist_lbl.pack(side="left", padx=12)
@@ -181,21 +192,21 @@ class App:
         self.v_act = tk.StringVar(value=self.cfg["action"])
         self.v_restore = tk.BooleanVar(value=self.cfg["restore_cursor"])
         self.v_show = tk.BooleanVar(value=True)
-        ttk.Label(opts, text="Soglia").grid(row=0, column=0, sticky="w")
+        ttk.Label(opts, text="Threshold").grid(row=0, column=0, sticky="w")
         ttk.Spinbox(opts, from_=1, to=100, increment=1, width=6, textvariable=self.v_thr).grid(row=0, column=1)
-        ttk.Label(opts, text="Intervallo ms").grid(row=0, column=2, sticky="w", padx=(10, 0))
+        ttk.Label(opts, text="Interval ms").grid(row=0, column=2, sticky="w", padx=(10, 0))
         ttk.Spinbox(opts, from_=50, to=5000, increment=50, width=6, textvariable=self.v_int).grid(row=0, column=3)
         ttk.Label(opts, text="Cooldown s").grid(row=0, column=4, sticky="w", padx=(10, 0))
         ttk.Spinbox(opts, from_=0, to=60, increment=0.5, width=6, textvariable=self.v_cool).grid(row=0, column=5)
-        ttk.Label(opts, text="Azione").grid(row=1, column=0, sticky="w")
+        ttk.Label(opts, text="Action").grid(row=1, column=0, sticky="w")
         ttk.Combobox(opts, values=list(MOUSE), textvariable=self.v_act, state="readonly",
                      width=14).grid(row=1, column=1, columnspan=2, sticky="w")
-        ttk.Checkbutton(opts, text="Riporta il mouse dov'era", variable=self.v_restore).grid(
+        ttk.Checkbutton(opts, text="Move mouse back afterwards", variable=self.v_restore).grid(
             row=1, column=3, columnspan=2, sticky="w", padx=(10, 0))
-        ttk.Checkbutton(opts, text="Mostra overlay", variable=self.v_show,
+        ttk.Checkbutton(opts, text="Show overlay", variable=self.v_show,
                         command=self.show_overlay).grid(row=1, column=5, sticky="w")
 
-        self.run_btn = ttk.Button(r, text="▶ Avvia (F8)", command=self.toggle_run)
+        self.run_btn = ttk.Button(r, text="▶ Start (F8)", command=self.toggle_run)
         self.run_btn.pack(fill="x", **pad)
 
         self.log_box = tk.Text(r, height=8, width=70, state="disabled", font=("Consolas", 9))
@@ -210,8 +221,8 @@ class App:
     def refresh_info(self):
         reg = self.cfg["region"]
         pt = self.cfg["click_point"]
-        txt = f"Zona: {reg if reg else 'non impostata'}    Punto click: "
-        txt += f"{pt}" if pt else ("centro zona" if reg else "-")
+        txt = f"Zone: {reg if reg else 'not set'}    Click point: "
+        txt += f"{pt}" if pt else ("zone center" if reg else "-")
         self.info.configure(text=txt)
 
     # ---------------------------------------------------------------- overlay
@@ -262,14 +273,14 @@ class App:
             t, b = sorted((sy, e.y_root))
             sel.destroy()
             if rgt - l < 4 or b - t < 4:
-                self.log("Zona troppo piccola, annullato.")
+                self.log("Zone too small, cancelled.")
             else:
                 self.cfg["region"] = [l, t, rgt, b]
                 self.refs = {"X": None, "Y": None}
                 for k in ("X", "Y"):
-                    self.ref_labels[k].configure(image="", text="(non catturato)")
+                    self.ref_labels[k].configure(image="", text="(not captured)")
                 self.stable = None
-                self.log(f"Zona impostata: {self.cfg['region']} (stati azzerati, ricatturali)")
+                self.log(f"Zone set: {self.cfg['region']} (states reset, capture them again)")
                 self.save()
             self.refresh_info()
             self.show_overlay()
@@ -289,10 +300,10 @@ class App:
 
     def capture_ref(self, key):
         if not self.cfg["region"]:
-            self.log("Prima seleziona una zona.")
+            self.log("Select a zone first.")
             return
         self.set_ref(key, self.grab(), save=True)
-        self.log(f"Stato {key} catturato.")
+        self.log(f"State {key} captured.")
 
     def set_ref(self, key, img, save):
         self.refs[key] = signature(img)
@@ -301,29 +312,29 @@ class App:
         self.thumbs[key] = ImageTk.PhotoImage(thumb)
         self.ref_labels[key].configure(image=self.thumbs[key], text="")
         if save:
-            img.save(os.path.join(BASE, f"stato_{key}.png"))
+            img.save(os.path.join(BASE, f"state_{key}.png"))
 
     def pick_point(self, remaining=3):
         if remaining > 0:
-            self.info.configure(text=f"Porta il mouse sul punto da cliccare... {remaining}")
+            self.info.configure(text=f"Move the mouse to the point to click... {remaining}")
             self.root.after(1000, lambda: self.pick_point(remaining - 1))
             return
         pt = wintypes.POINT()
         user32.GetCursorPos(ctypes.byref(pt))
         self.cfg["click_point"] = [pt.x, pt.y]
-        self.log(f"Punto click: {self.cfg['click_point']}")
+        self.log(f"Click point: {self.cfg['click_point']}")
         self.save()
         self.refresh_info()
 
     # ---------------------------------------------------------------- loop
     def toggle_run(self):
         if not self.running and not (self.cfg["region"] and self.refs["X"] and self.refs["Y"]):
-            self.log("Servono zona, stato X e stato Y prima di avviare.")
+            self.log("Zone, state X and state Y are required before starting.")
             return
         self.running = not self.running
         self.stable, self.candidate, self.cand_count = None, None, 0
-        self.run_btn.configure(text="■ Ferma (F8)" if self.running else "▶ Avvia (F8)")
-        self.log("Monitoraggio AVVIATO." if self.running else "Monitoraggio fermato.")
+        self.run_btn.configure(text="■ Stop (F8)" if self.running else "▶ Start (F8)")
+        self.log("Monitoring STARTED." if self.running else "Monitoring stopped.")
         self.save()
 
     def read_settings(self):
@@ -353,17 +364,17 @@ class App:
 
             if self.cfg["region"] and (self.refs["X"] or self.refs["Y"]):
                 state, dists = self.classify(signature(self.grab()))
-                self.state_lbl.configure(text=f"Stato: {state or '?'}")
+                self.state_lbl.configure(text=f"State: {state or '?'}")
                 self.dist_lbl.configure(text="   ".join(f"dist {k}: {v:.1f}" for k, v in dists.items())
-                                        + f"   (soglia {self.cfg['threshold']:g})")
+                                        + f"   (threshold {self.cfg['threshold']:g})")
                 if self.running:
                     self.handle(state)
         except Exception as e:
-            self.log(f"Errore: {e}")
+            self.log(f"Error: {e}")
         self.root.after(self.cfg["interval_ms"], self.tick)
 
     def handle(self, state):
-        if state is None:          # zona non riconosciuta: non cambia lo stato confermato
+        if state is None:          # zone not recognized: the confirmed state doesn't change
             self.candidate, self.cand_count = None, 0
             return
         if state == self.candidate:
@@ -373,12 +384,12 @@ class App:
         if self.cand_count < self.cfg["stable_frames"] or state == self.stable:
             return
         old, self.stable = self.stable, state
-        self.log(f"Stato {old or '-'} -> {state}")
+        self.log(f"State {old or '-'} -> {state}")
         if old == "X" and state == "Y":
             if time.time() - self.last_action >= self.cfg["cooldown_s"]:
                 self.do_action()
             else:
-                self.log("Transizione ignorata (cooldown).")
+                self.log("Transition ignored (cooldown).")
 
     def do_action(self):
         self.last_action = time.time()
@@ -389,7 +400,7 @@ class App:
             x, y = (l + r) // 2, (t + b) // 2
         self.flash()
         mouse_click(x, y, self.cfg["action"], self.cfg["restore_cursor"])
-        self.log(f"AZIONE: {self.cfg['action']} su ({x}, {y})")
+        self.log(f"ACTION: {self.cfg['action']} at ({x}, {y})")
 
     # ---------------------------------------------------------------- misc
     def save(self):
