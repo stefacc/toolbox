@@ -1,3 +1,0 @@
-Pillow
-numpy
-opencv-python  # optional: only needed for "search mode"

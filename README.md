@@ -8,7 +8,7 @@
 - [Lambda](aws/lambda.md)
 - [OpenSearch Service](aws/opensearch.md)
 - [S3 on Windows](aws/s3.md)
-- [itov - private image-to-video on GPU (ComfyUI + Wan 2.2)](aws/itov/README.md)
+- [itov - private image-to-video on GPU (ComfyUI + Wan 2.2)](https://github.com/stefacc/itov-image-to-video-on-cloud)
 - [EXTERNAL - S3 uploading using HTTP POST](https://www.youtube.com/watch?v=yt38b_Ave6I)
 ### bot
 - [telegram](bot/telegram-python.py)
@@ -31,8 +31,9 @@
 - [fast-local-webserver](fast-utilities/fast-local-webserver.md)
 - [gmail](fast-utilities/gmail.md)
 - [jpeg-compressor](fast-utilities/jpeg-compressor.md)
-- [pdf-tools - compress PDF files with Ghostscript (separate repo)](https://github.com/stefacc/pdf-tools)
+- [pdf-tools - compress PDF files with Ghostscript](https://github.com/stefacc/pdf-tools)
 - [mosquitto](fast-utilities/mosquitto.md)
+- [mqtt-js - MQTT over TLS client with client certificates](https://github.com/stefacc/mqtt-js)
 - [visual-studio-code-server](fast-utilities/visual-studio-code-server.md)
 - [EXTERNAL - tools base64, base32 etc](https://tomeko.net/online_tools/base64.php?lang=en)
 - [EXTERNAL - ASCII converter](https://www.branah.com/ascii-converter)
@@ -45,8 +46,8 @@
 - [async/await](js/async-await.js)
 - [in browser jquery](js/jquery.md)
 - [pm2](js/pm2.md)
-- [nepsaver - new podcast episodes to a Spotify playlist](js/nepsaver/README.md)
-- [wstunnel - WebSocket relay between two clients behind NAT](js/wstunnel/README.md)
+- [nepsaver - new podcast episodes to a Spotify playlist](https://github.com/stefacc/nepsaver)
+- [wstunnel - WebSocket relay between two clients behind NAT](https://github.com/stefacc/wstunnel)
 ### pipelining
 - [atlassian bamboo](bamboo.md)
 ### python
@@ -60,8 +61,8 @@
 ### windows
 - [windows](windows.md)
 - [zipping.bat - zip current folder with timestamp](windows.md#zip-current-folder-with-timestamp)
-- [overlay - green overlay on a screen zone, automatic click on state change](windows/overlay/README.md)
-- [quiz_snap - floating button: screenshot to Claude, answer in a window](windows/quiz_snap/README.md)
+- [overlay - green overlay on a screen zone, automatic click on state change](https://github.com/stefacc/overlay-trigger)
+- [quiz_snap - floating button: screenshot to Claude, answer in a window](https://github.com/stefacc/quiz-snap)
 ### miscellaneous
 - [EXTERNAL - gps-geographic coordinate converter](https://www.coordinate-gps.it/)
 - [EXTERNAL - nmea-gmaps converter](https://www.gonmad.co.uk/nmea.php)
