@@ -1,0 +1,9 @@
+__pycache__/
+*.pyc
+
+# per-machine settings and captures written by the tools at runtime
+windows/overlay/config.json
+windows/overlay/state_*.png
+windows/overlay/stato_*.png
+windows/quiz_snap/quiz_snap_config.json
+windows/quiz_snap/screenshots/

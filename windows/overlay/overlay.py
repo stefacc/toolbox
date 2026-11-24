@@ -22,6 +22,12 @@ import tkinter as tk
 from ctypes import wintypes
 from tkinter import ttk
 
+import numpy as np
+try:
+    import cv2
+except ImportError:      # search mode needs OpenCV (pip install opencv-python)
+    cv2 = None
+
 from PIL import Image, ImageChops, ImageGrab, ImageStat, ImageTk
 
 # Physical pixel coordinates even with Windows scaling at 125%/150%
@@ -60,6 +66,11 @@ DEFAULTS = {
     "action": "left click",
     "restore_cursor": True,
     "overlay_alpha": 0.30,
+    "follow_window": False,  # move zone/click point together with a chosen window
+    "win_title": "",         # title of the window to follow
+    "search_mode": False,    # look for the captured figure inside a larger area
+    "search_region": None,   # [left, top, right, bottom] of that area
+    "win_anchor": None,      # [left, top] of that window when zone/point were set
 }
 
 
@@ -79,6 +90,29 @@ def make_clickthrough(win):
     user32.SetWindowLongW(hwnd, GWL_EXSTYLE, style | WS_EX_LAYERED | WS_EX_TRANSPARENT
                           | WS_EX_TOOLWINDOW | WS_EX_NOACTIVATE)
     user32.SetWindowDisplayAffinity(hwnd, WDA_EXCLUDEFROMCAPTURE)
+
+
+def window_title(hwnd):
+    buf = ctypes.create_unicode_buffer(512)
+    user32.GetWindowTextW(hwnd, buf, 512)
+    return buf.value
+
+
+def find_window(title):
+    """First visible top-level window whose title contains `title`."""
+    found = []
+    proc = ctypes.WINFUNCTYPE(wintypes.BOOL, wintypes.HWND, wintypes.LPARAM)(
+        lambda h, _l: (found.append(h) if user32.IsWindowVisible(h) and title.lower()
+                       in window_title(h).lower() else None) or True)
+    user32.EnumWindows(proc, 0)
+    return found[0] if found else None
+
+
+def window_origin(hwnd):
+    r = wintypes.RECT()
+    if not hwnd or not user32.IsWindow(hwnd) or user32.IsIconic(hwnd)             or not user32.GetWindowRect(hwnd, ctypes.byref(r)):
+        return None
+    return r.left, r.top
 
 
 def signature(img):
@@ -124,12 +158,18 @@ class App:
 
         self.refs = {"X": None, "Y": None}      # 32x32 signatures
         self.thumbs = {}
+        self.full = {}                          # full-resolution templates (RGB arrays)
+        self.found = {}                         # last match position per state (screen coords)
+        self.match_rect = None
+        self.ov_last = None
         self.running = False
         self.stable = None
         self.candidate = None
         self.cand_count = 0
         self.last_action = 0.0
         self.f8_was_down = False
+        self.follow_hwnd = None
+        self.last_delta = (0, 0)
 
         self.root = tk.Tk()
         self.root.title("Overlay Trigger")
@@ -192,6 +232,8 @@ class App:
         self.v_act = tk.StringVar(value=self.cfg["action"])
         self.v_restore = tk.BooleanVar(value=self.cfg["restore_cursor"])
         self.v_show = tk.BooleanVar(value=True)
+        self.v_follow = tk.BooleanVar(value=self.cfg["follow_window"])
+        self.v_search = tk.BooleanVar(value=self.cfg["search_mode"])
         ttk.Label(opts, text="Threshold").grid(row=0, column=0, sticky="w")
         ttk.Spinbox(opts, from_=1, to=100, increment=1, width=6, textvariable=self.v_thr).grid(row=0, column=1)
         ttk.Label(opts, text="Interval ms").grid(row=0, column=2, sticky="w", padx=(10, 0))
@@ -205,6 +247,21 @@ class App:
             row=1, column=3, columnspan=2, sticky="w", padx=(10, 0))
         ttk.Checkbutton(opts, text="Show overlay", variable=self.v_show,
                         command=self.show_overlay).grid(row=1, column=5, sticky="w")
+
+        srch = ttk.Frame(r)
+        srch.pack(fill="x", **pad)
+        ttk.Checkbutton(srch, text="Search figure in larger area", variable=self.v_search,
+                        command=self.toggle_search).pack(side="left")
+        ttk.Button(srch, text="5. Select search area", command=lambda: self.select_region("search")
+                   ).pack(side="left", padx=6)
+
+        win = ttk.Frame(r)
+        win.pack(fill="x", **pad)
+        ttk.Checkbutton(win, text="Follow window", variable=self.v_follow,
+                        command=self.toggle_follow).pack(side="left")
+        ttk.Button(win, text="Pick window (3s)", command=self.pick_window).pack(side="left", padx=6)
+        self.win_lbl = ttk.Label(win, text="")
+        self.win_lbl.pack(side="left")
 
         self.run_btn = ttk.Button(r, text="▶ Start (F8)", command=self.toggle_run)
         self.run_btn.pack(fill="x", **pad)
@@ -224,10 +281,111 @@ class App:
         txt = f"Zone: {reg if reg else 'not set'}    Click point: "
         txt += f"{pt}" if pt else ("zone center" if reg else "-")
         self.info.configure(text=txt)
+        if hasattr(self, "win_lbl"):
+            t = self.cfg["win_title"]
+            self.win_lbl.configure(text=(t[:40] + "…" if len(t) > 40 else t) if t else "(no window picked)")
+
+    # ---------------------------------------------------------------- follow window
+    def delta(self):
+        """Offset of the followed window from where it was when zone/point were set."""
+        if not (self.cfg["follow_window"] and self.cfg["win_anchor"] and self.cfg["win_title"]):
+            return 0, 0
+        org = window_origin(self.follow_hwnd)
+        if org is None:
+            self.follow_hwnd = find_window(self.cfg["win_title"])
+            org = window_origin(self.follow_hwnd)
+        if org is None:
+            return self.last_delta      # window not found/minimized: keep last position
+        ax, ay = self.cfg["win_anchor"]
+        self.last_delta = (org[0] - ax, org[1] - ay)
+        return self.last_delta
+
+    def eff_region(self):
+        reg = self.cfg["region"]
+        if not reg:
+            return None
+        dx, dy = self.delta()
+        return [reg[0] + dx, reg[1] + dy, reg[2] + dx, reg[3] + dy]
+
+    def eff_point(self):
+        pt = self.cfg["click_point"]
+        if self.search_on() and self.found.get("Y"):
+            # click relative to where the figure was found (offset taken from the captured zone)
+            fx, fy = self.found["Y"]
+            reg = self.cfg["region"]
+            if pt:
+                return fx + pt[0] - reg[0], fy + pt[1] - reg[1]
+            h, w = self.full["Y"].shape[:2]
+            return fx + w // 2, fy + h // 2
+        if pt:
+            dx, dy = self.delta()
+            return pt[0] + dx, pt[1] + dy
+        reg = self.eff_region()
+        return ((reg[0] + reg[2]) // 2, (reg[1] + reg[3]) // 2)
+
+    def toggle_follow(self):
+        self.cfg["follow_window"] = bool(self.v_follow.get())
+        if self.cfg["follow_window"] and not self.cfg["win_title"]:
+            self.log("Follow window: now use 'Pick window (3s)'.")
+        self.last_delta = (0, 0)
+        self.save()
+        self.refresh_info()
+        self.show_overlay()
+
+    def pick_window(self, remaining=3):
+        if remaining > 0:
+            self.win_lbl.configure(text=f"Hover the target window... {remaining}")
+            self.root.after(1000, lambda: self.pick_window(remaining - 1))
+            return
+        pt = wintypes.POINT()
+        user32.GetCursorPos(ctypes.byref(pt))
+        hwnd = user32.GetAncestor(user32.WindowFromPoint(pt), 2)   # GA_ROOT
+        if not hwnd or hwnd == hwnd_of(self.root) or not window_title(hwnd):
+            self.log("No valid window under the cursor.")
+            self.refresh_info()
+            return
+        # re-express zone/point in the new window's frame (they stay where they are on screen)
+        self.follow_hwnd = hwnd
+        self.cfg["win_title"] = window_title(hwnd)
+        self.cfg["win_anchor"] = list(window_origin(hwnd))
+        self.last_delta = (0, 0)
+        self.v_follow.set(True)
+        self.cfg["follow_window"] = True
+        self.log(f"Following window: {self.cfg['win_title']!r}")
+        self.save()
+        self.refresh_info()
 
     # ---------------------------------------------------------------- overlay
+    def search_on(self):
+        return bool(cv2 and self.cfg["search_mode"] and self.cfg["search_region"])
+
+    def eff_search(self):
+        sr = self.cfg["search_region"]
+        if not sr:
+            return None
+        dx, dy = self.delta()
+        return [sr[0] + dx, sr[1] + dy, sr[2] + dx, sr[3] + dy]
+
+    def overlay_rect(self):
+        if self.search_on():
+            return self.match_rect or self.eff_search()
+        return self.eff_region()
+
+    def toggle_search(self):
+        if self.v_search.get() and not cv2:
+            self.v_search.set(False)
+            self.log("OpenCV missing: pip install opencv-python")
+        self.cfg["search_mode"] = bool(self.v_search.get())
+        if self.cfg["search_mode"] and not self.cfg["search_region"]:
+            self.log("Search mode: now use '5. Select search area'.")
+        self.match_rect = None
+        self.stable = None
+        self.save()
+        self.show_overlay()
+
     def show_overlay(self, color="#00c853"):
-        reg = self.cfg["region"]
+        reg = self.overlay_rect()
+        self.ov_last = reg
         if not reg or not self.v_show.get():
             self.overlay.withdraw()
             return
@@ -239,12 +397,12 @@ class App:
         make_clickthrough(self.overlay)
 
     def flash(self):
-        if self.v_show.get() and self.cfg["region"]:
+        if self.v_show.get() and self.overlay_rect():
             self.overlay.configure(bg="#ff1744")
             self.root.after(300, lambda: self.overlay.configure(bg="#00c853"))
 
     # ---------------------------------------------------------------- setup
-    def select_region(self):
+    def select_region(self, kind="region"):
         self.overlay.withdraw()
         vx, vy, vw, vh = virtual_screen()
         sel = tk.Toplevel(self.root)
@@ -274,8 +432,15 @@ class App:
             sel.destroy()
             if rgt - l < 4 or b - t < 4:
                 self.log("Zone too small, cancelled.")
+            elif kind == "search":
+                dx, dy = self.delta()
+                self.cfg["search_region"] = [l - dx, t - dy, rgt - dx, b - dy]
+                self.match_rect = None
+                self.log(f"Search area set: {self.cfg['search_region']}")
+                self.save()
             else:
-                self.cfg["region"] = [l, t, rgt, b]
+                dx, dy = self.delta()
+                self.cfg["region"] = [l - dx, t - dy, rgt - dx, b - dy]
                 self.refs = {"X": None, "Y": None}
                 for k in ("X", "Y"):
                     self.ref_labels[k].configure(image="", text="(not captured)")
@@ -296,7 +461,7 @@ class App:
         sel.focus_force()
 
     def grab(self):
-        return ImageGrab.grab(bbox=tuple(self.cfg["region"]), all_screens=True).convert("RGB")
+        return ImageGrab.grab(bbox=tuple(self.eff_region()), all_screens=True).convert("RGB")
 
     def capture_ref(self, key):
         if not self.cfg["region"]:
@@ -307,6 +472,7 @@ class App:
 
     def set_ref(self, key, img, save):
         self.refs[key] = signature(img)
+        self.full[key] = np.ascontiguousarray(np.asarray(img.convert("RGB")))
         thumb = img.copy()
         thumb.thumbnail((160, 90))
         self.thumbs[key] = ImageTk.PhotoImage(thumb)
@@ -321,7 +487,8 @@ class App:
             return
         pt = wintypes.POINT()
         user32.GetCursorPos(ctypes.byref(pt))
-        self.cfg["click_point"] = [pt.x, pt.y]
+        dx, dy = self.delta()
+        self.cfg["click_point"] = [pt.x - dx, pt.y - dy]
         self.log(f"Click point: {self.cfg['click_point']}")
         self.save()
         self.refresh_info()
@@ -354,6 +521,30 @@ class App:
             best = None
         return best, dists
 
+    def match(self):
+        """Find each captured figure inside the search area. Distance = RMS pixel difference (0-255)."""
+        sr = self.eff_search()
+        img = np.ascontiguousarray(np.asarray(
+            ImageGrab.grab(bbox=tuple(sr), all_screens=True).convert("RGB")))
+        dists, self.found = {}, {}
+        for k, tpl in self.full.items():
+            if img.shape[0] < tpl.shape[0] or img.shape[1] < tpl.shape[1]:
+                continue
+            res = cv2.matchTemplate(img, tpl, cv2.TM_SQDIFF)
+            mn, _, loc, _ = cv2.minMaxLoc(res)
+            dists[k] = (max(mn, 0.0) / tpl.size) ** 0.5
+            self.found[k] = (sr[0] + loc[0], sr[1] + loc[1])
+        best = min(dists, key=dists.get) if dists else None
+        if best is not None and dists[best] > self.cfg["threshold"]:
+            best = None
+        if best:
+            h, w = self.full[best].shape[:2]
+            x, y = self.found[best]
+            self.match_rect = [x, y, x + w, y + h]
+        else:
+            self.match_rect = None
+        return best, dists
+
     def tick(self):
         try:
             self.read_settings()
@@ -362,8 +553,17 @@ class App:
                 self.toggle_run()
             self.f8_was_down = f8
 
-            if self.cfg["region"] and (self.refs["X"] or self.refs["Y"]):
+            if self.cfg["follow_window"]:
+                self.delta()
+            if self.search_on() and self.full:
+                state, dists = self.match()
+            elif self.cfg["region"] and (self.refs["X"] or self.refs["Y"]):
                 state, dists = self.classify(signature(self.grab()))
+            else:
+                state, dists = None, None
+            if self.overlay_rect() != self.ov_last:
+                self.show_overlay()
+            if dists is not None:
                 self.state_lbl.configure(text=f"State: {state or '?'}")
                 self.dist_lbl.configure(text="   ".join(f"dist {k}: {v:.1f}" for k, v in dists.items())
                                         + f"   (threshold {self.cfg['threshold']:g})")
@@ -393,11 +593,7 @@ class App:
 
     def do_action(self):
         self.last_action = time.time()
-        if self.cfg["click_point"]:
-            x, y = self.cfg["click_point"]
-        else:
-            l, t, r, b = self.cfg["region"]
-            x, y = (l + r) // 2, (t + b) // 2
+        x, y = self.eff_point()
         self.flash()
         mouse_click(x, y, self.cfg["action"], self.cfg["restore_cursor"])
         self.log(f"ACTION: {self.cfg['action']} at ({x}, {y})")

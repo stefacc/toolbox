@@ -56,6 +56,7 @@
 ### windows
 - [windows](windows.md)
 - [overlay - green overlay on a screen zone, automatic click on state change](windows/overlay/README.md)
+- [quiz_snap - floating button: screenshot to Claude, answer in a window](windows/quiz_snap/README.md)
 ### miscellaneous
 - [EXTERNAL - gps-geographic coordinate converter](https://www.coordinate-gps.it/)
 - [EXTERNAL - nmea-gmaps converter](https://www.gonmad.co.uk/nmea.php)
