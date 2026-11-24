@@ -19,3 +19,24 @@ Start-Transcript -path C:\output.txt -append
 # Do some stuff
 Stop-Transcript
 ```
+
+## zip current folder with timestamp
+`zipping.bat`: put it in a folder and run it, it creates `<folder name>-YYYYMMDDTHHMMSS.7z`
+with everything inside (recursively), except the script itself.
+Needs [7-Zip](https://www.7-zip.org/) with `7z` on PATH. The date parsing assumes the
+`dd/mm/yyyy` short date format (e.g. Italian locale); for other formats adjust the
+`%date:~...%` offsets.
+```bat
+@ECHO OFF
+CLS
+
+REM ISO 8601 Date and Time in basic format (YYYYMMDDTHHMMSS)
+SET isodt=%date:~6,4%%date:~3,2%%date:~0,2%T%time:~0,2%%time:~3,2%%time:~6,2%
+SET isodt=%isodt: =0%
+ECHO ISO 8601 Date and Time in basic format (YYYYMMDDTHHMMSS): %isodt%
+
+for %%I in (.) do set CurrDirName=%%~nxI
+echo %CurrDirName%
+
+7z a -r %CurrDirName%-%isodt% * -x!zipping.bat
+```

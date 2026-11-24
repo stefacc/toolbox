@@ -12,6 +12,7 @@
 - [EXTERNAL - S3 uploading using HTTP POST](https://www.youtube.com/watch?v=yt38b_Ave6I)
 ### bot
 - [telegram](bot/telegram-python.py)
+- [telegram-node - minimal Telegram bot with Telegraf](bot/telegram-node/README.md)
 ### linux
 - [bash](linux/bash.md)
 - [commands](linux/commands.md)
@@ -30,6 +31,7 @@
 - [fast-local-webserver](fast-utilities/fast-local-webserver.md)
 - [gmail](fast-utilities/gmail.md)
 - [jpeg-compressor](fast-utilities/jpeg-compressor.md)
+- [pdf-tools - compress PDF files with Ghostscript (separate repo)](https://github.com/stefacc/pdf-tools)
 - [mosquitto](fast-utilities/mosquitto.md)
 - [visual-studio-code-server](fast-utilities/visual-studio-code-server.md)
 - [EXTERNAL - tools base64, base32 etc](https://tomeko.net/online_tools/base64.php?lang=en)
@@ -41,8 +43,10 @@
 ### js/nodejs/typescript
 - [links](js/links.md)
 - [async/await](js/async-await.js)
-- [in browser jquery](js/jquery.js)
+- [in browser jquery](js/jquery.md)
 - [pm2](js/pm2.md)
+- [nepsaver - new podcast episodes to a Spotify playlist](js/nepsaver/README.md)
+- [wstunnel - WebSocket relay between two clients behind NAT](js/wstunnel/README.md)
 ### pipelining
 - [atlassian bamboo](bamboo.md)
 ### python
@@ -55,6 +59,7 @@
 - [git](git.md)
 ### windows
 - [windows](windows.md)
+- [zipping.bat - zip current folder with timestamp](windows.md#zip-current-folder-with-timestamp)
 - [overlay - green overlay on a screen zone, automatic click on state change](windows/overlay/README.md)
 - [quiz_snap - floating button: screenshot to Claude, answer in a window](windows/quiz_snap/README.md)
 ### miscellaneous

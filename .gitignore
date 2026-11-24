@@ -7,3 +7,8 @@ windows/overlay/state_*.png
 windows/overlay/stato_*.png
 windows/quiz_snap/quiz_snap_config.json
 windows/quiz_snap/screenshots/
+node_modules/
+.env
+
+# personal data read/written by the tools
+js/nepsaver/creds.json

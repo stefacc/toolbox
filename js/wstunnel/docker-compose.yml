@@ -1,0 +1,21 @@
+# Local demo: relay server + one source + one destination exchanging ping/pong.
+# To use a remote relay instead, remove the "wstunnel" service and set SERVER.
+services:
+  wstunnel:
+    build: .
+    ports:
+      - 8080:8080
+  source:
+    build: ./clients
+    command: npm run start-source
+    environment:
+      - SERVER=${SERVER:-http://wstunnel:8080}
+    depends_on:
+      - wstunnel
+  destination:
+    build: ./clients
+    command: npm run start-destination
+    environment:
+      - SERVER=${SERVER:-http://wstunnel:8080}
+    depends_on:
+      - wstunnel

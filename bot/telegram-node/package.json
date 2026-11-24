@@ -1,0 +1,13 @@
+{
+  "name": "telegram-node",
+  "version": "1.0.0",
+  "description": "Minimal Telegram bot with Telegraf",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js"
+  },
+  "license": "ISC",
+  "dependencies": {
+    "telegraf": "^4.12.2"
+  }
+}
